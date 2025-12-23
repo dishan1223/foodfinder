@@ -10,17 +10,16 @@ import {
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 
-export default function RestaurantDetails() {
+export default function HotelDetails() {
   const router = useRouter();
   const params = useLocalSearchParams();
 
-  // Parse the restaurant data from params
-  const restaurant = {
-    name: params.name || 'Restaurant',
-    foodEmoji: params.foodEmoji || '🍽️',
-    foodItems: params.foodItems ? JSON.parse(params.foodItems) : [],
+  // Parse the hotel data from params
+  const hotel = {
+    name: params.name || 'Hotel',
     distance: params.distance || 'N/A',
-    openingHours: params.openingHours || 'Not available',
+    category: params.category || 'Hotel',
+    stars: parseInt(params.stars) || 0,
     address: params.address || 'Address not available',
     phone: params.phone || null,
     website: params.website || null,
@@ -35,8 +34,8 @@ export default function RestaurantDetails() {
       android: 'geo:',
     });
     
-    const latLng = `${restaurant.latitude},${restaurant.longitude}`;
-    const label = encodeURIComponent(restaurant.name);
+    const latLng = `${hotel.latitude},${hotel.longitude}`;
+    const label = encodeURIComponent(hotel.name);
     
     const url = Platform.select({
       ios: `${scheme}?q=${label}&ll=${latLng}`,
@@ -44,72 +43,71 @@ export default function RestaurantDetails() {
     });
 
     Linking.openURL(url).catch(() => {
-      // Fallback to browser-based Google Maps
       const browserUrl = `https://www.google.com/maps/search/?api=1&query=${latLng}`;
       Linking.openURL(browserUrl);
     });
   };
 
   // Call phone number
-  const callRestaurant = () => {
-    if (restaurant.phone) {
-      Linking.openURL(`tel:${restaurant.phone}`);
+  const callHotel = () => {
+    if (hotel.phone) {
+      Linking.openURL(`tel:${hotel.phone}`);
     }
   };
 
   // Open website
   const openWebsite = () => {
-    if (restaurant.website) {
-      Linking.openURL(restaurant.website);
+    if (hotel.website) {
+      Linking.openURL(hotel.website);
     }
   };
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50 dark:bg-black">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        {/* Restaurant Header Card */}
+        {/* Hotel Header Card */}
         <View className="bg-white dark:bg-gray-900 mx-4 mt-4 p-6 rounded-2xl shadow-sm">
-          {/* Food Emoji */}
+          {/* Hotel Icon */}
           <View className="items-center mb-4">
-            <View className="bg-gradient-to-br from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 w-24 h-24 rounded-3xl items-center justify-center">
-              <Text className="text-6xl">{restaurant.foodEmoji}</Text>
+            <View className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 w-24 h-24 rounded-3xl items-center justify-center">
+              <Text className="text-6xl">🏨</Text>
             </View>
           </View>
 
-          {/* Restaurant Name */}
+          {/* Hotel Name */}
           <Text className="text-2xl font-bold text-black dark:text-white text-center mb-2">
-            {restaurant.name}
+            {hotel.name}
           </Text>
+
+          {/* Star Rating */}
+          {hotel.stars > 0 && (
+            <View className="items-center mb-2">
+              <Text className="text-2xl">
+                {'⭐'.repeat(hotel.stars)}
+              </Text>
+            </View>
+          )}
 
           {/* Distance Badge */}
           <View className="items-center mb-4">
             <View className="bg-blue-50 dark:bg-blue-900/20 px-4 py-2 rounded-full">
               <Text className="text-sm font-bold text-blue-600 dark:text-blue-400">
-                📍 {restaurant.distance} away
+                📍 {hotel.distance} away
               </Text>
             </View>
           </View>
 
-          {/* Popular Food Items */}
-          {restaurant.foodItems && restaurant.foodItems.length > 0 && (
-            <View className="mb-4">
-              <Text className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
-                Popular Items
+          {/* Category */}
+          <View className="mb-4">
+            <Text className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+              Category
+            </Text>
+            <View className="bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded-full self-start">
+              <Text className="text-sm text-gray-700 dark:text-gray-300 capitalize">
+                {hotel.category}
               </Text>
-              <View className="flex-row flex-wrap">
-                {restaurant.foodItems.map((food, index) => (
-                  <View
-                    key={index}
-                    className="bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full mr-2 mb-2"
-                  >
-                    <Text className="text-sm text-gray-700 dark:text-gray-300">
-                      {food}
-                    </Text>
-                  </View>
-                ))}
-              </View>
             </View>
-          )}
+          </View>
         </View>
 
         {/* Details Section */}
@@ -118,23 +116,8 @@ export default function RestaurantDetails() {
             Information
           </Text>
 
-          {/* Opening Hours */}
-          <View className="mb-4">
-            <View className="flex-row items-start">
-              <Text className="text-2xl mr-3">🕒</Text>
-              <View className="flex-1">
-                <Text className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                  Opening Hours
-                </Text>
-                <Text className="text-base text-gray-600 dark:text-gray-400">
-                  {restaurant.openingHours}
-                </Text>
-              </View>
-            </View>
-          </View>
-
           {/* Address */}
-          <View className="mb-4 pt-4 border-t border-gray-100 dark:border-gray-800">
+          <View className="mb-4">
             <View className="flex-row items-start">
               <Text className="text-2xl mr-3">📍</Text>
               <View className="flex-1">
@@ -142,17 +125,17 @@ export default function RestaurantDetails() {
                   Address
                 </Text>
                 <Text className="text-base text-gray-600 dark:text-gray-400">
-                  {restaurant.address}
+                  {hotel.address}
                 </Text>
               </View>
             </View>
           </View>
 
           {/* Phone */}
-          {restaurant.phone && (
+          {hotel.phone && (
             <View className="mb-4 pt-4 border-t border-gray-100 dark:border-gray-800">
               <TouchableOpacity
-                onPress={callRestaurant}
+                onPress={callHotel}
                 className="flex-row items-start"
                 activeOpacity={0.7}
               >
@@ -162,7 +145,7 @@ export default function RestaurantDetails() {
                     Phone
                   </Text>
                   <Text className="text-base text-blue-600 dark:text-blue-400">
-                    {restaurant.phone}
+                    {hotel.phone}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -170,7 +153,7 @@ export default function RestaurantDetails() {
           )}
 
           {/* Website */}
-          {restaurant.website && (
+          {hotel.website && (
             <View className="pt-4 border-t border-gray-100 dark:border-gray-800">
               <TouchableOpacity
                 onPress={openWebsite}
@@ -183,7 +166,7 @@ export default function RestaurantDetails() {
                     Website
                   </Text>
                   <Text className="text-base text-blue-600 dark:text-blue-400" numberOfLines={1}>
-                    {restaurant.website}
+                    {hotel.website}
                   </Text>
                 </View>
               </TouchableOpacity>

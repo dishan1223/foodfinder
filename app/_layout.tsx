@@ -4,27 +4,42 @@ import "./globals.css"
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-
+  
   return (
     <Stack
       screenOptions={{
-        // Set a solid background color for the header
         headerStyle: {
-          backgroundColor: colorScheme === 'dark' ? '#1C1C1E' : '#F2F2F7', // System Grouped Background
+          backgroundColor: colorScheme === 'dark' ? '#1C1C1E' : '#F2F2F7',
         },
-        // Set the color for the header text and buttons (back button, etc.)
         headerTintColor: colorScheme === 'dark' ? '#FFFFFF' : '#000000',
-        // Optional: Add a subtle shadow for depth in light mode
         headerShadowVisible: colorScheme === 'light',
       }}
     >
+      {/* Tabs group - contains index.jsx and Hotels.jsx */}
       <Stack.Screen
-        name="index"
+        name="(tabs)"
         options={{
-          // Set the title that appears in the header
-          title: 'Discover',
-          // Enable the iOS "Large Title" style for this screen's header
-          headerLargeTitle: true,
+          headerShown: false, // Hide Stack header, Tabs will show their own
+        }}
+      />
+      
+      {/* Restaurant Details */}
+      <Stack.Screen
+        name="RestaurantDetails"
+        options={{
+          presentation: 'card',
+          title: 'Restaurant Details',
+          headerBackTitle: 'Back',
+        }}
+      />
+
+      {/* Hotel Details */}
+      <Stack.Screen
+        name="HotelDetails"
+        options={{
+          presentation: 'card',
+          title: 'Hotel Details',
+          headerBackTitle: 'Back',
         }}
       />
     </Stack>
