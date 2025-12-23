@@ -16,7 +16,7 @@ import * as Location from 'expo-location';
 import { useRouter } from 'expo-router';
 
 // Geoapify API Key
-const GEOAPIFY_API_KEY = '0a24f931b6fc4688a934bb370948af3a';
+const GEOAPIFY_API_KEY = process.env.EXPO_PUBLIC_API_KEY;
 
 // Food emoji mapping for different cuisines
 const getFoodEmoji = (cuisineString) => {
