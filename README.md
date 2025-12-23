@@ -43,7 +43,7 @@ FoodFinder is in **early beta**:
 
 ### Clone the repository
 ```bash
-git clone https://github.com/your-username/foodfinder.git
+git clone https://github.com/dishan1223/foodfinder.git
 cd foodfinder
 ```
 
